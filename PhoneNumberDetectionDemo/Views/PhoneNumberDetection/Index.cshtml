@@ -1,0 +1,55 @@
+﻿@model PhoneNumberDetectionDemo.Models.TextInputModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Input Text</h2>
+
+@using (Html.BeginForm("ProcessInput", "PhoneNumberDetection", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <label for="SelectedSource">Select Input Source:</label>
+        @Html.DropDownListFor(model => model.SelectedSource, Enum.GetValues(typeof(PhoneNumberDetectionDemo.Models.TextInputModel.InputSource)).Cast<PhoneNumberDetectionDemo.Models.TextInputModel.InputSource>().Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), new { @class = "form-control" })
+    </div>
+
+    <div id="TextFileUpload" style="display:none;">
+        <label for="fileInput">Upload Text File:</label>
+        <input type="file" name="File" id="File" />
+    </div>
+
+    <div id="TextInputArea">
+        <label for="Text">Input Text:</label>
+        @Html.TextAreaFor(model => model.Text, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Process</button>
+}
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Handler for dropdown change event
+            $('#SelectedSource').change(function () {
+                var selectedValue = $(this).val();
+                if (selectedValue === "TextFile") {
+                    $('#TextFileUpload').show();
+                    $('#TextInputArea').hide();
+                    $('#fileInput').attr('required', true); // Add required attribute to file input
+                } else {
+                    $('#TextFileUpload').hide();
+                    $('#TextInputArea').show();
+                    $('#fileInput').removeAttr('required'); // Remove required attribute from file input
+                }
+            });
+        });
+    </script>
+}

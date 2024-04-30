@@ -1,0 +1,47 @@
+﻿@model PhoneNumberDetectionDemo.ViewModel.PhoneNumberViewModel
+
+@{
+    ViewBag.Title = "Results";
+}
+
+<h2>Results</h2>
+
+<h3>Input Text:</h3>
+<p>@Model.InputText</p>
+
+@if (Model.DetectedPhoneNumbers.Count > 0)
+{
+    <h3>Detected Phone Numbers:</h3>
+    <ul>
+        @foreach (var phoneNumber in Model.DetectedPhoneNumbers)
+        {
+            if (!string.IsNullOrWhiteSpace(phoneNumber.CountryCode) && string.IsNullOrWhiteSpace(phoneNumber.Valid))
+            {
+                <li>
+                    Country Code: @phoneNumber.CountryCode, Phone Number: @phoneNumber.PhoneNumber
+                </li>
+            }
+            if (string.IsNullOrWhiteSpace(phoneNumber.CountryCode) && string.IsNullOrWhiteSpace(phoneNumber.Valid))
+            {
+                <li>
+                    Phone Number: @phoneNumber.PhoneNumber
+                </li>
+            }
+            if (!string.IsNullOrWhiteSpace(phoneNumber.Valid))
+            {
+                <li>
+                    Valid : @phoneNumber.PhoneNumber + @phoneNumber.Valid
+                </li>
+            }
+
+        }
+    </ul>
+}
+else
+{
+    <div class="alert alert-info">
+        @Model.Message
+    </div>
+}
+
+@Html.ActionLink("Back to Input", "Index")
